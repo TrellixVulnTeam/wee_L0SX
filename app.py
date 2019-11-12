@@ -1,11 +1,16 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from random import choices
+from flask_mysqldb import MySQL
 import string
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = '3306'
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = 'url_shortener'
+app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 db = SQLAlchemy(app)
 
 
@@ -32,9 +37,25 @@ class Link(db.Model):
         return short_url
 
 
-@app.route('/')
+@app.route('/', methods=['POST', 'GET'])
 def home():
+    # original_url = request.form['original_url']
+    # link = Link(original_url=original_url)
+    # db.session.add(link)
+    # db.session.commit()
+    if request.method == 'POST'
+        cur = mysql.connection.cursor()
+
+        cur.execute("INSERT INTO links('original_url') VALUES(%s), (original_url) ")
+
+        mysql.connection.commit()
+
+        cur.close()
     return render_template("home.html")
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return '', 404
 
 if __name__ == "__main__":
     app.run(debug=True)
